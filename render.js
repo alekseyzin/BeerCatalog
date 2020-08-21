@@ -1,7 +1,7 @@
 export class Render {
 
-    renderBearsList = (data, elementBearsList) => {
-        let htmlBearsList = ``
+    renderBearsList = (data, elementBearsList, isSearch) => {
+        let htmlBearsList = isSearch ? `` : elementBearsList.innerHTML
 
         if (data.length) {
             data.forEach(item => {
@@ -21,7 +21,7 @@ export class Render {
                 </div>`
             })
         } else {
-            htmlBearsList = `<div class="alert alert-warning" role="alert">
+            htmlBearsList += `<div class="alert alert-warning empty-data" role="alert">
                                   There were no properties found for the given bear.
                             </div>`
         }
