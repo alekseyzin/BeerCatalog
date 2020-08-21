@@ -14,7 +14,7 @@
 <header>
     <nav class="navbar navbar-dark bg-primary">
         <div class="container justify-content-center position-relative">
-            <a href="#" class="navbar-brand">HousesShop</a>
+            <a href="#" class="navbar-brand">Beer as grandma prepared</a>
             <button type="button" class="btn btn-outline-light position-absolute btn-favourites">Favourites</button>
         </div>
     </nav>
@@ -23,21 +23,23 @@
     <div class="container">
         <div class="search-holder mt-4 d-flex flex-column align-items-center">
             <div class="search">
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2 search-input" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+                <div class="form-inline align-items-start">
+                    <div class="search-input-holder">
+                        <input class="form-control mr-sm-2 search-input" type="search" placeholder="Search" aria-label="Search">
+                        <div class="invalid-feedback">Search is empty</div>
+                    </div>
+                    <button class="btn btn-secondary my-2 my-sm-0 search-button" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
-                </form>
+                </div>
                 <div class="recent-searches-holder mt-2">
                     <span>Recent searches:</span>
-                    <div class="recent-searches border border-secondary text-dark rounded d-flex flex-column p-1">
-                        <span>Куплю слона <span>(20)</span></span>
-                        <span>Ищу мужа <span>(5)</span></span>
-                        <span>Продам мопед <span>(20)</span></span>
+                    <div class="recent-searches border border-secondary text-dark rounded flex-column p-1">
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="bears-list d-flex flex-column align-items-center mt-3">
         </div>
     </div>
 </main>
@@ -53,5 +55,7 @@
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous">
 </script>
+
+<script type="module" src="script.js"> </script>
 </body>
 </html>
