@@ -38,6 +38,7 @@ export class Favorite {
         const favorites = []
 
         for (const item of this.favoritesId) {
+
             const itemData = await this.getBearItemById(item)
             favorites.push(itemData[0])
         }

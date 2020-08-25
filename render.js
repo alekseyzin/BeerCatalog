@@ -5,7 +5,7 @@ export class Render {
             <div class="card mb-3">
                 <div class="row no-gutters bear-card">
                     <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
-                        <img src="${data.image_url}" class="card-img bear-card-img" alt="${data.name} style="height=auto">
+                        <img src="${data.image_url}" class="card-img bear-card-img" alt="${data.name} style=" height=auto">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -20,6 +20,12 @@ export class Render {
         `
     }
 
+    getHTMLBeerItemNotFond () {
+        return `<div class="alert alert-warning empty-data" role="alert">
+                                  There were no properties found for the given bear.
+                            </div>`
+    }
+
     renderBearsList = (data, elementBearsList, isSearch) => {
         let htmlBearsList = isSearch ? `` : elementBearsList.innerHTML
 
@@ -28,9 +34,7 @@ export class Render {
                 htmlBearsList += this.getHTMLBeerItem(item)
             })
         } else {
-            htmlBearsList += `<div class="alert alert-warning empty-data" role="alert">
-                                  There were no properties found for the given bear.
-                            </div>`
+            htmlBearsList += this.getHTMLBeerItemNotFond()
         }
 
         elementBearsList.innerHTML = htmlBearsList
