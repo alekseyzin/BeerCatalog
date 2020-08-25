@@ -1,18 +1,54 @@
+/* header */
+
 .btn-favourites {
     right: 0;
 }
+
+/* search */
 
 .search {
     width: 50%;
 }
 
-.search-input {
-    width: 90%!important;
+.search-input-holder {
+    width: 90%;
 }
+
+.search-input {
+    width: 100%!important;
+}
+
+.search-button {
+    margin-left: 5px;
+}
+
 .recent-searches {
     width: max-content;
+    display: none;
+}
+
+.recent-searches.visible {
+    display: flex;
 }
 
 .recent-searches span {
     font-size: 0.8rem;
+    cursor: pointer;
+}
+
+/* bears list */
+
+.bear-card {
+    max-width: 540px;
+    height: 250px;
+}
+
+.bear-card-img {
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.bear-description {
+    max-height: 100px;
+    overflow: hidden;
 }
