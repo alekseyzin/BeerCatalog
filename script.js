@@ -50,6 +50,7 @@ async function searchInputHandler (e) {
 
 async function searchByResentSearch (e) {
     const searchValue = e.target.textContent
+    searchInput.value = searchValue
     const bearsData = await api.searchBear(searchValue)
 
     render.renderBearsList(bearsData, beerList, true)
