@@ -1,3 +1,5 @@
+import {Url} from './url.js'
+
 export class Favorite {
     constructor() {
         this.favoritesId = []
@@ -27,7 +29,8 @@ export class Favorite {
     }
 
     getBearItemById = async (id) => {
-        const item = await fetch(`https://api.punkapi.com/v2/beers/${id}`);
+        const item = await fetch(`${Url.getApiUrl()}/${id}`);
+
         return await item.json()
     }
 
@@ -41,20 +44,24 @@ export class Favorite {
         return favorites
     }
 
+    getHTMLFavoriteItem(data) {
+        return `
+            <li class="media">
+                 <img src="${data.image_url}" class="mr-3 fav-img" alt="${data.name}">
+                 <div class="media-body">
+                   <h5 class="mt-0 mb-1">${data.name}</h5>
+                   ${data.description}
+                 </div>
+                 <button id="${data.id}" type="button" class="btn btn-danger">Remove</button>
+            </li>
+        `
+    }
+
     renderFavorites = (favorites, elementForContent) => {
         let favoritesHTMLContent = ``
 
         favorites.forEach(item => {
-            favoritesHTMLContent += `
-                <li class="media">
-                    <img src="${item.image_url}" class="mr-3 fav-img" alt="${item.name}">
-                    <div class="media-body">
-                      <h5 class="mt-0 mb-1">${item.name}</h5>
-                      ${item.description}
-                    </div>
-                    <button id="${item.id}" type="button" class="btn btn-danger">Remove</button>
-                </li>
-            `
+            favoritesHTMLContent += this.getHTMLFavoriteItem(item)
         })
 
         elementForContent.innerHTML = favoritesHTMLContent

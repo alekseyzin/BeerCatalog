@@ -1,35 +1,30 @@
 import {Api} from './api.js'
 import {Render} from './render.js'
 import {Favorite} from "./favorite.js";
+import {
+    searchInput, searchButton, recentSearchElement, beerList, loadMoreButton,
+    scrollUpButton, favoritesButton, favoritesList
+} from './constants.js'
 
 const api = new Api()
 const render = new Render()
 const favorite = new Favorite()
-const searchInput = document.body.querySelector('.search-input')
-const searchButton = document.body.querySelector('.search-button')
-const recentSearchElement = document.body.querySelector('.recent-searches')
-const beerList = document.body.querySelector('.bears-list')
-const loadMoreButton = document.body.querySelector('.load-more-button')
-const scrollUpButton = document.body.querySelector('.scroll-up-button')
-const favoritesButton = document.body.querySelector('.btn-favorites')
-const favoritesList = document.body.querySelector('.fav-list')
 
-
-function isInputEmpty (value) {
-    return  !value.length
+function isInputEmpty(value) {
+    return !value.length
 }
 
-function highlightingForInputs (isError, element) {
+function highlightingForInputs(isError, element) {
     isError ? element.classList.add('is-invalid') : element.classList.remove('is-invalid')
 }
 
-function scrollToFirstCard () {
+function scrollToFirstCard() {
     const firstCard = document.body.querySelector('.card')
 
     firstCard.scrollIntoView({block: "start", behavior: "smooth"})
 }
 
-async  function searchBearsHandler () {
+async function searchBearsHandler() {
     const searchValue = searchInput.value.trim()
     const isSearchEmpty = isInputEmpty(searchValue)
 
@@ -46,13 +41,13 @@ async  function searchBearsHandler () {
     }
 }
 
-async function searchInputHandler (e) {
-    if(e.key === 'Enter') {
-        await  searchBearsHandler()
+async function searchInputHandler(e) {
+    if (e.key === 'Enter') {
+        await searchBearsHandler()
     }
 }
 
-async function searchByResentSearch (e) {
+async function searchByResentSearch(e) {
     const searchValue = e.target.textContent
     const bearsData = await api.searchBear(searchValue)
 
@@ -61,29 +56,27 @@ async function searchByResentSearch (e) {
     scrollToFirstCard()
 }
 
-async function loadMoreHandler () {
+async function loadMoreHandler() {
     const bearsData = await api.loadMoreBears(beerList)
 
     render.renderBearsList(bearsData, beerList)
 }
 
-function activateLoadMoreButton () {
-    if (beerList.children.length && !beerList.children[0].classList.contains('empty-data')) {
-        loadMoreButton.style.display = 'block'
-    } else {
-        loadMoreButton.style.display = 'none'
-    }
+function isBeerListFilled () {
+    return beerList.children.length && !beerList.children[0].classList.contains('empty-data')
 }
 
-function toggleScrollButton () {
-    if (pageYOffset > 200) {
-        scrollUpButton.style.display = 'block'
-    } else {
-        scrollUpButton.style.display = 'none'
-    }
+function activateLoadMoreButton() {
+    loadMoreButton.style.display = isBeerListFilled() ? 'block' : 'none'
 }
 
-function  addToFavoriteHolder(e) {
+function toggleScrollButton() {
+    const distanceToFirstBeerBlock = 200
+
+    scrollUpButton.style.display = pageYOffset > distanceToFirstBeerBlock ? 'block' : 'none'
+}
+
+function addToFavoriteHolder(e) {
     if (e.target.classList.contains('btn-add-fav')) {
         favorite.setBearItemToFavorite(e.target.id)
         favorite.availableButton(favoritesButton)
@@ -92,16 +85,16 @@ function  addToFavoriteHolder(e) {
     }
 }
 
-async function getFavoritesHolder () {
+async function getFavoritesHolder() {
     const favorites = await favorite.getAllFavorites()
     const elementForContent = document.body.querySelector('.fav-list')
 
     favorite.renderFavorites(favorites, elementForContent)
 }
 
-async function removeFavoriteItemHandler (e) {
+async function removeFavoriteItemHandler(e) {
     favorite.removeFavoriteItem(e.target.id)
-    await getFavoritesHolder ()
+    await getFavoritesHolder()
     favorite.setCountFavoritesToButton(favoritesButton)
 }
 
