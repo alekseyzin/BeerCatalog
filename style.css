@@ -1,6 +1,6 @@
 /* header */
 
-.btn-favourites {
+.btn-favorites {
     right: 0;
 }
 
@@ -40,7 +40,7 @@
 
 .bear-card {
     max-width: 540px;
-    height: 250px;
+    height: 300px;
 }
 
 .bear-card-img {
