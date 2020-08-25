@@ -20,8 +20,9 @@ export class Favorite {
         button.textContent = `Favorites (${this.favorites.length})`
     }
 
-    changeColorButton = (button) => {
+    changeAddButtonToRemove = (button) => {
         button.classList.remove('btn-warning')
         button.classList.add('btn-danger')
+        button.textContent = `Remove`
     }
 }

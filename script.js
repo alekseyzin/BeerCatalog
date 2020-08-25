@@ -86,7 +86,7 @@ function  favoriteButtonsHolder(e) {
         favorite.setBearItemToFavorite(e.target.id)
         favorite.availableButton(favoritesButton)
         favorite.setCountFavoritesToButton(favoritesButton)
-        favorite.changeColorButton(e.target)
+        favorite.changeAddButtonToRemove(e.target)
     }
 }
 
