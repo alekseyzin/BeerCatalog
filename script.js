@@ -1,14 +1,17 @@
 import {Api} from './api.js'
 import {Render} from './render.js'
+import {Favorite} from "./favorite.js";
 
 const api = new Api()
 const render = new Render()
+const favorite = new Favorite()
 const searchInput = document.body.querySelector('.search-input')
 const searchButton = document.body.querySelector('.search-button')
 const recentSearchElement = document.body.querySelector('.recent-searches')
 const beerList = document.body.querySelector('.bears-list')
 const loadMoreButton = document.body.querySelector('.load-more-button')
 const scrollUpButton = document.body.querySelector('.scroll-up-button')
+const favoritesButton = document.body.querySelector('.btn-favorites')
 
 
 function isInputEmpty (value) {
@@ -78,9 +81,19 @@ function toggleScrollButton () {
     }
 }
 
+function  favoriteButtonsHolder(e) {
+    if (e.target.classList.contains('btn-add-fav')) {
+        favorite.setBearItemToFavorite(e.target.id)
+        favorite.availableButton(favoritesButton)
+        favorite.setCountFavoritesToButton(favoritesButton)
+        favorite.changeColorButton(e.target)
+    }
+}
+
 searchButton.addEventListener('click', searchBearsHandler)
 searchInput.addEventListener('keydown', searchInputHandler)
 recentSearchElement.addEventListener('click', searchByResentSearch)
 loadMoreButton.addEventListener('click', loadMoreHandler)
 window.addEventListener('scroll', toggleScrollButton);
 scrollUpButton.addEventListener('click', scrollToFirstCard)
+beerList.addEventListener('click', favoriteButtonsHolder)

@@ -15,6 +15,7 @@ export class Render {
                                 <h5 class="card-title">${item.name}</h5>
                                 <p class="card-text bear-description">${item.description}</p>
                                 <p class="card-text"><small class="text-muted">${item.contributed_by}</small></p>
+                                <button id="${item.id}" type="button" class="btn btn-warning btn-add-fav">Add</button>
                             </div>
                         </div>
                     </div>
