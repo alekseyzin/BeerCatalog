@@ -6,7 +6,10 @@ const render = new Render()
 const searchInput = document.body.querySelector('.search-input')
 const searchButton = document.body.querySelector('.search-button')
 const recentSearchElement = document.body.querySelector('.recent-searches')
-const baerList = document.body.querySelector('.bears-list')
+const beerList = document.body.querySelector('.bears-list')
+const loadMoreButton = document.body.querySelector('.load-more-button')
+const scrollUpButton = document.body.querySelector('.scroll-up-button')
+
 
 function isInputEmpty (value) {
     return  !value.length
@@ -32,9 +35,10 @@ async  function searchBearsHandler () {
         const bearsData = await api.searchBear(searchValue)
         const dataRecentSearch = {bearsData, searchValue, recentSearchElement}
 
-        render.renderBearsList(bearsData, baerList)
+        render.renderBearsList(bearsData, beerList, true)
         render.renderRecentSearchList(dataRecentSearch)
-        scrollToFirstCard()
+        bearsData.length && scrollToFirstCard()
+        activateLoadMoreButton()
     }
 }
 
@@ -48,10 +52,34 @@ async function searchByResentSearch (e) {
     const searchValue = e.target.textContent
     const bearsData = await api.searchBear(searchValue)
 
-    render.renderBearsList(bearsData, baerList)
+    render.renderBearsList(bearsData, beerList, true)
     scrollToFirstCard()
+}
+
+async function loadMoreHandler () {
+    const bearsData = await api.loadMoreBears(beerList)
+    render.renderBearsList(bearsData, beerList)
+}
+
+function activateLoadMoreButton () {
+    if (beerList.children.length && !beerList.children[0].classList.contains('empty-data')) {
+        loadMoreButton.style.display = 'block'
+    } else {
+        loadMoreButton.style.display = 'none'
+    }
+}
+
+function toggleScrollButton () {
+    if (pageYOffset > 200) {
+        scrollUpButton.style.display = 'block'
+    } else {
+        scrollUpButton.style.display = 'none'
+    }
 }
 
 searchButton.addEventListener('click', searchBearsHandler)
 searchInput.addEventListener('keydown', searchInputHandler)
 recentSearchElement.addEventListener('click', searchByResentSearch)
+loadMoreButton.addEventListener('click', loadMoreHandler)
+window.addEventListener('scroll', toggleScrollButton);
+scrollUpButton.addEventListener('click', scrollToFirstCard)
