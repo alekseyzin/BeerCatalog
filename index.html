@@ -15,7 +15,8 @@
     <nav class="navbar navbar-dark bg-primary">
         <div class="container justify-content-center position-relative">
             <a href="#" class="navbar-brand">Beer as grandma prepared</a>
-            <button type="button" class="btn btn-outline-light position-absolute btn-favorites" disabled>
+            <button type="button" class="btn btn-outline-light position-absolute btn-favorites"
+                    data-toggle="modal" data-target="#modalFavorites" disabled>
                 Favourites
             </button>
         </div>
@@ -46,6 +47,21 @@
             <button style="display: none" type="button" class="btn btn-success load-more-button">Load more</button>
         </div>
         <button style="display: none" type="button" class="btn btn-success scroll-up-button">up</button>
+        <div class="modal fade" id="modalFavorites" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Favorites</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-unstyled fav-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

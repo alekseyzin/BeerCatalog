@@ -12,6 +12,7 @@ const beerList = document.body.querySelector('.bears-list')
 const loadMoreButton = document.body.querySelector('.load-more-button')
 const scrollUpButton = document.body.querySelector('.scroll-up-button')
 const favoritesButton = document.body.querySelector('.btn-favorites')
+const favoritesList = document.body.querySelector('.fav-list')
 
 
 function isInputEmpty (value) {
@@ -53,15 +54,16 @@ async function searchInputHandler (e) {
 
 async function searchByResentSearch (e) {
     const searchValue = e.target.textContent
-    searchInput.value = searchValue
     const bearsData = await api.searchBear(searchValue)
 
+    searchInput.value = searchValue
     render.renderBearsList(bearsData, beerList, true)
     scrollToFirstCard()
 }
 
 async function loadMoreHandler () {
     const bearsData = await api.loadMoreBears(beerList)
+
     render.renderBearsList(bearsData, beerList)
 }
 
@@ -81,7 +83,7 @@ function toggleScrollButton () {
     }
 }
 
-function  favoriteButtonsHolder(e) {
+function  addToFavoriteHolder(e) {
     if (e.target.classList.contains('btn-add-fav')) {
         favorite.setBearItemToFavorite(e.target.id)
         favorite.availableButton(favoritesButton)
@@ -90,10 +92,25 @@ function  favoriteButtonsHolder(e) {
     }
 }
 
+async function getFavoritesHolder () {
+    const favorites = await favorite.getAllFavorites()
+    const elementForContent = document.body.querySelector('.fav-list')
+
+    favorite.renderFavorites(favorites, elementForContent)
+}
+
+async function removeFavoriteItemHandler (e) {
+    favorite.removeFavoriteItem(e.target.id)
+    await getFavoritesHolder ()
+    favorite.setCountFavoritesToButton(favoritesButton)
+}
+
 searchButton.addEventListener('click', searchBearsHandler)
 searchInput.addEventListener('keydown', searchInputHandler)
 recentSearchElement.addEventListener('click', searchByResentSearch)
 loadMoreButton.addEventListener('click', loadMoreHandler)
 window.addEventListener('scroll', toggleScrollButton);
 scrollUpButton.addEventListener('click', scrollToFirstCard)
-beerList.addEventListener('click', favoriteButtonsHolder)
+beerList.addEventListener('click', addToFavoriteHolder)
+favoritesButton.addEventListener('click', getFavoritesHolder)
+favoritesList.addEventListener('click', removeFavoriteItemHandler)
