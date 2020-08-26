@@ -1,18 +1,22 @@
 export class Render {
 
-    getHTMLBeerItem (data) {
+    getHTMLBeerItem (data, isFavorite) {
         return `
             <div class="card mb-3">
                 <div class="row no-gutters bear-card">
                     <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
-                        <img src="${data.image_url}" class="card-img bear-card-img" alt="${data.name} style=" height=auto">
+                        <img src="${data.image_url}" class="card-img bear-card-img" alt="${data.name} 
+                        style=" height=auto">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">${data.name}</h5>
                             <p class="card-text bear-description">${data.description}</p>
                             <p class="card-text"><small class="text-muted">${data.contributed_by}</small></p>
-                            <button id="${data.id}" type="button" class="btn btn-warning btn-add-fav">Add</button>
+                            <button favorite="${isFavorite}" id="${data.id}" type="button" 
+                                    class="btn ${isFavorite ? 'btn-danger' : 'btn-warning'} btn-add-fav">
+                                ${isFavorite ? "Remove" : "Add"}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -26,18 +30,20 @@ export class Render {
                             </div>`
     }
 
-    renderBearsList = (data, elementBearsList, isSearch) => {
-        let htmlBearsList = isSearch ? `` : elementBearsList.innerHTML
+    renderBearsList = ({bearsData, beerList, favorites, isSearch}) => {
+        let htmlBearsList = isSearch ? `` : beerList.innerHTML
 
-        if (data.length) {
-            data.forEach(item => {
-                htmlBearsList += this.getHTMLBeerItem(item)
+        if (bearsData.length) {
+            bearsData.forEach(item => {
+                htmlBearsList += favorites.includes(item.id)
+                    ? this.getHTMLBeerItem(item, true)
+                    : this.getHTMLBeerItem(item, false)
             })
         } else {
             htmlBearsList += this.getHTMLBeerItemNotFond()
         }
 
-        elementBearsList.innerHTML = htmlBearsList
+        beerList.innerHTML = htmlBearsList
     }
 
     renderRecentSearchList = ({bearsData, searchValue, recentSearchElement}) => {
