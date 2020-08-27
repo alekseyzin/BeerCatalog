@@ -4,7 +4,6 @@ export class Api {
 
     constructor() {
         this.itemPerPage = 5
-        this.recentSearches = []
     }
 
     async getDataFromApi(url) {
@@ -52,13 +51,21 @@ export class Api {
         return await item.json()
     }
 
-    setSearchValueToDataBase(searchValue) {
-        const indx = this.recentSearches.findIndex(item => item.searchValue === searchValue)
+    setRecentSearch(searchValue) {
+        !localStorage.recentSearches && localStorage.setItem('recentSearches', '[]')
+
+        const recentSearches = JSON.parse(localStorage.recentSearches)
+        const indx = recentSearches.findIndex(item => item.searchValue === searchValue)
 
         if (indx !== -1) {
-            this.recentSearches[indx].count++
+            recentSearches[indx].count++
         } else {
-            this.recentSearches.push({searchValue, count: 1})
+            recentSearches.push({searchValue, count: 1})
         }
+        localStorage.recentSearches = JSON.stringify(recentSearches)
+    }
+
+    getRecentSearches() {
+        return localStorage.recentSearches ? JSON.parse(localStorage.recentSearches) : []
     }
 }

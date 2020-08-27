@@ -34,7 +34,8 @@ export class Render {
     }
 
     isAddErrorToBeersList (bearsData, beerList) {
-        return bearsData[0] === 'notLoad' && !beerList.querySelector('.error-beer')
+        const errorBlock = '.error-beer'
+        return bearsData[0] === 'notLoad' && !beerList.querySelector(errorBlock)
     }
 
     isAddBearsToList (bearsData) {
