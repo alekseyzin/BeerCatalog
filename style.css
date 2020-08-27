@@ -32,6 +32,9 @@
 
 .recent-searches span {
     font-size: 0.8rem;
+}
+
+.resent-search-block {
     cursor: pointer;
 }
 

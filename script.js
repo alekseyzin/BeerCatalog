@@ -54,12 +54,16 @@ async function searchInputHandler(e) {
 }
 
 async function searchByResentSearch(e) {
-    const searchValue = e.target.textContent
-    const renderData = await getBeersData(searchValue)
+    const resentSearchElem = 'resent-search-block'
 
-    searchInput.value = searchValue
-    render.renderBearsList(renderData)
-    scrollToFirstCard()
+    if (e.target.classList.contains(resentSearchElem)) {
+        const searchValue = e.target.textContent
+        const renderData = await getBeersData(searchValue)
+
+        searchInput.value = searchValue
+        render.renderBearsList(renderData)
+        scrollToFirstCard()
+    }
 }
 
 async function loadMoreHandler() {

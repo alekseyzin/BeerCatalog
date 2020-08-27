@@ -28,31 +28,53 @@ export class Render {
     }
 
     getHTMLBeerItemNotFond() {
-        return `<div class="alert alert-warning empty-data" role="alert">
-                                  There were no properties found for the given bear.
-                            </div>`
+        return `<div class="alert alert-warning empty-data error-beer" role="alert">
+                     There were no properties found for the given bear.
+                </div>`
+    }
+
+    isAddErrorToBeersList (bearsData, beerList) {
+        return bearsData[0] === 'notLoad' && !beerList.querySelector('.error-beer')
+    }
+
+    isAddBearsToList (bearsData) {
+        return bearsData.length && bearsData[0] !== 'notLoad'
+    }
+
+    isDisplayErrorWhenSearch (isSearch, bearsData) {
+        return isSearch && !bearsData.length
     }
 
     renderBearsList = ({bearsData, beerList, favorites, isSearch}) => {
         let htmlBearsList = isSearch ? `` : beerList.innerHTML
 
-        if (bearsData.length) {
-            htmlBearsList += bearsData.map(item => {
-                return favorites.includes(item.id)
-                    ? this.getHTMLBeerItem(item, true)
-                    : this.getHTMLBeerItem(item, false)
-            })
-        } else {
+        if (this.isAddErrorToBeersList(bearsData, beerList)) {
             htmlBearsList += this.getHTMLBeerItemNotFond()
+        } else if (this.isAddBearsToList(bearsData)) {
+            htmlBearsList = bearsData.reduce((html, item) => {
+                return `${html} ${favorites.includes(item.id)
+                    ? this.getHTMLBeerItem(item, true)
+                    : this.getHTMLBeerItem(item, false)}`
+            }, '')
+        } else if (this.isDisplayErrorWhenSearch(isSearch, bearsData)) {
+            htmlBearsList = this.getHTMLBeerItemNotFond()
         }
-
         beerList.innerHTML = htmlBearsList
+    }
+
+    getHTMLBRecentSearchItem(data) {
+        return `
+            <div>
+               <span class="resent-search-block">${data.searchValue}</span> 
+               <span class="ml-1">(${data.count})</span>
+            </div>
+        `
     }
 
     renderRecentSearchList = (recentSearches, recentSearchElement) => {
         const recentSearchesHtml = recentSearches.reduce((html, data) => {
-          return `${html} <span>${data.searchValue} ${data.count}</span>`
-        },'')
+            return `${html} ${this.getHTMLBRecentSearchItem(data)}`
+        }, '')
 
         recentSearchElement.innerHTML = recentSearchesHtml
         recentSearchElement.classList.add('visible')
