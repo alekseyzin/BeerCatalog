@@ -1,4 +1,5 @@
 import {Url} from './url.js'
+import  {classFavorite, classNotFavorite} from './constants.js'
 
 export class Favorite {
 
@@ -71,15 +72,16 @@ export class Favorite {
     }
 
     setFavoriteStatusToButton (elem) {
-        elem.classList.add('btn-danger')
-        elem.classList.remove('btn-warning')
+
+        elem.classList.add(classFavorite)
+        elem.classList.remove(classNotFavorite)
         elem.textContent = `Remove`
         elem.setAttribute('favorite', 'true')
     }
 
     removeFavoriteStatusFromButton (elem) {
-        elem.classList.add('btn-warning')
-        elem.classList.remove('btn-danger')
+        elem.classList.add(classNotFavorite)
+        elem.classList.remove(classFavorite)
         elem.textContent = `Add`
         elem.setAttribute('favorite', 'false')
     }

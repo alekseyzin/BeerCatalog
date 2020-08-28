@@ -9,8 +9,9 @@ export class Api {
     async getDataFromApi(url) {
         try {
             const response = await fetch(url)
+            const badRequestCode = 400
 
-            if (response.status === 400) {
+            if (response.status === badRequestCode) {
                 throw new Error('error')
             }
             return await response.json()
@@ -55,13 +56,14 @@ export class Api {
         !localStorage.recentSearches && localStorage.setItem('recentSearches', '[]')
 
         const recentSearches = JSON.parse(localStorage.recentSearches)
-        const indx = recentSearches.findIndex(item => item.searchValue === searchValue)
+        const searchedItem = recentSearches.find(({searchValue: value}) => value === searchValue)
 
-        if (indx !== -1) {
-            recentSearches[indx].count++
+        if (searchedItem) {
+            searchedItem.count++
         } else {
             recentSearches.push({searchValue, count: 1})
         }
+
         localStorage.recentSearches = JSON.stringify(recentSearches)
     }
 

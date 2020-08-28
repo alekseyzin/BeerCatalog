@@ -7,3 +7,5 @@ export const scrollUpButton = document.body.querySelector('.scroll-up-button')
 export const favoritesButton = document.body.querySelector('.btn-favorites')
 export const favoritesList = document.body.querySelector('.fav-list')
 export const beerCardContent = document.body.querySelector('.beer-card-content')
+export  const classFavorite = 'btn-danger'
+export const classNotFavorite = 'btn-warning'

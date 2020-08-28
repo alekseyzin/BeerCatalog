@@ -14,7 +14,7 @@ function isInputEmpty(value) {
     return !value.length
 }
 
-function highlightingForInputs(isError, element) {
+function handleInputHighlighting(isError, element) {
     isError ? element.classList.add('is-invalid') : element.classList.remove('is-invalid')
 }
 
@@ -34,7 +34,7 @@ async function searchBearsHandler() {
     const searchValue = searchInput.value.trim()
     const isSearchEmpty = isInputEmpty(searchValue)
 
-    highlightingForInputs(isSearchEmpty, searchInput)
+    handleInputHighlighting(isSearchEmpty, searchInput)
 
     if (!isSearchEmpty) {
         const renderData = await getBeersData(searchValue)
@@ -63,6 +63,7 @@ async function searchByResentSearch(e) {
         searchInput.value = searchValue
         render.renderBearsList(renderData)
         scrollToFirstCard()
+        activateLoadMoreButton()
     }
 }
 
