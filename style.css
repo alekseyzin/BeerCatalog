@@ -23,7 +23,6 @@
 }
 
 .recent-searches {
-    width: max-content;
     display: none;
 }
 
@@ -33,6 +32,9 @@
 
 .recent-searches span {
     font-size: 0.8rem;
+}
+
+.resent-search-block {
     cursor: pointer;
 }
 
@@ -74,4 +76,12 @@
 .media-body {
     max-height: 100px;
     overflow: hidden;
+}
+
+/* beer card */
+
+.beer-card-img {
+    max-height: 300px;
+    object-fit: contain;
+    margin-top: 20px;
 }
