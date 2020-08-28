@@ -1,25 +1,28 @@
 import {Url} from './url.js'
+import  {classFavorite, classNotFavorite} from './constants.js'
 
 export class Favorite {
-    constructor() {
-        this.favoritesId = []
-    }
 
-    setInFavoritesOnlyUniqueVal = () => {
-        this.favoritesId = [...new Set(this.favoritesId)]
+    getFavorites() {
+        return localStorage.favorites ? JSON.parse(localStorage.favorites) : []
     }
 
     setBearItemToFavorite = (idBearItem) => {
-        this.favoritesId.push(+idBearItem)
-        this.setInFavoritesOnlyUniqueVal()
+        !localStorage.favorites && localStorage.setItem('favorites', '[]')
+
+        let favorites = JSON.parse(localStorage.favorites)
+
+        favorites.push(+idBearItem)
+        favorites = [...new Set(favorites)]
+        localStorage.favorites = JSON.stringify(favorites)
     }
 
     toggleAvailableButton = (button) => {
-        button.disabled = !this.favoritesId.length
+        button.disabled = !this.getFavorites().length
     }
 
     setCountFavoritesToButton = (button) => {
-        button.textContent = `Favorites (${this.favoritesId.length})`
+        button.textContent = `Favorites (${this.getFavorites().length})`
     }
 
     getBearItemById = async (id) => {
@@ -31,7 +34,7 @@ export class Favorite {
     getAllFavorites = async () => {
         const favorites = []
 
-        for (const item of this.favoritesId) {
+        for (const item of this.getFavorites()) {
 
             const itemData = await this.getBearItemById(item)
             favorites.push(itemData[0])
@@ -62,19 +65,23 @@ export class Favorite {
     }
 
     removeBeerItemFromFavorites = (id) => {
-        this.favoritesId = this.favoritesId.filter(item => item !== +id)
+        let favorites = this.getFavorites()
+
+        favorites = favorites.filter(item => item !== +id)
+        localStorage.favorites = JSON.stringify(favorites)
     }
 
     setFavoriteStatusToButton (elem) {
-        elem.classList.add('btn-danger')
-        elem.classList.remove('btn-warning')
+
+        elem.classList.add(classFavorite)
+        elem.classList.remove(classNotFavorite)
         elem.textContent = `Remove`
         elem.setAttribute('favorite', 'true')
     }
 
     removeFavoriteStatusFromButton (elem) {
-        elem.classList.add('btn-warning')
-        elem.classList.remove('btn-danger')
+        elem.classList.add(classNotFavorite)
+        elem.classList.remove(classFavorite)
         elem.textContent = `Add`
         elem.setAttribute('favorite', 'false')
     }
@@ -83,7 +90,7 @@ export class Favorite {
         const favoriteBtns = beerList.querySelectorAll('.btn-add-fav')
 
         favoriteBtns.forEach(elem => {
-            if (this.favoritesId.includes(+elem.id)) {
+            if (this.getFavorites().includes(+elem.id)) {
                 this.setFavoriteStatusToButton(elem)
             } else {
                 this.removeFavoriteStatusFromButton(elem)

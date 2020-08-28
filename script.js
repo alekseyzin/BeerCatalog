@@ -14,7 +14,7 @@ function isInputEmpty(value) {
     return !value.length
 }
 
-function highlightingForInputs(isError, element) {
+function handleInputHighlighting(isError, element) {
     isError ? element.classList.add('is-invalid') : element.classList.remove('is-invalid')
 }
 
@@ -27,22 +27,22 @@ function scrollToFirstCard() {
 async function getBeersData (searchValue) {
     const bearsData = await api.searchBear(searchValue)
 
-    return {bearsData, beerList, favorites: favorite.favoritesId, isSearch: true}
+    return {bearsData, beerList, favorites: favorite.getFavorites(), isSearch: true}
 }
 
 async function searchBearsHandler() {
     const searchValue = searchInput.value.trim()
     const isSearchEmpty = isInputEmpty(searchValue)
 
-    highlightingForInputs(isSearchEmpty, searchInput)
+    handleInputHighlighting(isSearchEmpty, searchInput)
 
     if (!isSearchEmpty) {
         const renderData = await getBeersData(searchValue)
 
         render.renderBearsList(renderData)
         renderData.bearsData.length && scrollToFirstCard()
-        renderData.bearsData.length && api.setSearchValueToDataBase(searchValue)
-        api.recentSearches.length && render.renderRecentSearchList(api.recentSearches, recentSearchElement)
+        renderData.bearsData.length && api.setRecentSearch(searchValue)
+        api.getRecentSearches().length && render.renderRecentSearchList(api.getRecentSearches(), recentSearchElement)
         activateLoadMoreButton()
     }
 }
@@ -63,13 +63,14 @@ async function searchByResentSearch(e) {
         searchInput.value = searchValue
         render.renderBearsList(renderData)
         scrollToFirstCard()
+        activateLoadMoreButton()
     }
 }
 
 async function loadMoreHandler() {
     const bearsData = await api.loadMoreBears(beerList)
 
-    render.renderBearsList({bearsData, beerList, favorites: favorite.favoritesId, isSearch: false})
+    render.renderBearsList({bearsData, beerList, favorites: favorite.getFavorites(), isSearch: false})
 }
 
 function isBeerListFilled () {
@@ -120,7 +121,7 @@ async function renderBeerItemHTMLToModal (e) {
         const beerCardData = {
             beerCardElement: beerCardContent,
             beerData: beerData[0],
-            favorites: favorite.favoritesId
+            favorites: favorite.getFavorites()
         }
 
         render.renderBeerCard(beerCardData)
@@ -147,3 +148,7 @@ favoritesButton.addEventListener('click', renderFavoritesList)
 favoritesList.addEventListener('click', removeFavoriteFromFavoriteList)
 beerList.addEventListener('click', renderBeerItemHTMLToModal)
 beerCardContent.addEventListener('click', controllerBeerCardFavoriteStatus)
+
+api.getRecentSearches().length && render.renderRecentSearchList(api.getRecentSearches(), recentSearchElement)
+favorite.toggleAvailableButton(favoritesButton)
+favorite.setCountFavoritesToButton(favoritesButton)

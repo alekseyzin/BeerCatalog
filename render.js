@@ -34,7 +34,9 @@ export class Render {
     }
 
     isAddErrorToBeersList (bearsData, beerList) {
-        return bearsData[0] === 'notLoad' && !beerList.querySelector('.error-beer')
+        const errorBlock = '.error-beer'
+
+        return bearsData[0] === 'notLoad' && !beerList.querySelector(errorBlock)
     }
 
     isAddBearsToList (bearsData) {
@@ -51,7 +53,7 @@ export class Render {
         if (this.isAddErrorToBeersList(bearsData, beerList)) {
             htmlBearsList += this.getHTMLBeerItemNotFond()
         } else if (this.isAddBearsToList(bearsData)) {
-            htmlBearsList = bearsData.reduce((html, item) => {
+            htmlBearsList += bearsData.reduce((html, item) => {
                 return `${html} ${favorites.includes(item.id)
                     ? this.getHTMLBeerItem(item, true)
                     : this.getHTMLBeerItem(item, false)}`
