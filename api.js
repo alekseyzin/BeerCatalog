@@ -1,27 +1,35 @@
+import {Url} from './url.js'
+
 export class Api {
 
     constructor() {
         this.itemPerPage = 5
     }
 
-    searchBear = async (searchValue) => {
-        this.lastSearch = searchValue
-        const url = `https://api.punkapi.com/v2/beers?per_page=${this.itemPerPage}&beer_name=${searchValue}`
+    async getDataFromApi (url) {
         const response = await fetch(url)
 
         return await response.json()
+    }
+
+    searchBear = async (searchValue) => {
+        this.lastSearch = searchValue
+
+        const url = `${Url.getApiUrl()}?per_page=${this.itemPerPage}&beer_name=${searchValue}`
+
+        return await this.getDataFromApi(url)
     }
 
     getPageNumber (elementBearsList) {
         const countElements = elementBearsList.children.length
-        const pageNumber = countElements / this.itemPerPage + 1
-        return pageNumber
+
+        return countElements / this.itemPerPage + 1
     }
 
     loadMoreBears = async (elementBearsList) => {
         const pageNumber = this.getPageNumber(elementBearsList)
-        const url = `https://api.punkapi.com/v2/beers?page=${pageNumber}&per_page=${this.itemPerPage}&beer_name=${this.lastSearch}`
-        const response = await fetch(url)
-        return await response.json()
+        const url = `${Url.getApiUrl()}?page=${pageNumber}&per_page=${this.itemPerPage}&beer_name=${this.lastSearch}`
+
+        return await this.getDataFromApi(url)
     }
 }
