@@ -10,22 +10,22 @@ export class Favorite {
     }
 
     setBearItemToFavorite = (idBearItem) => {
-        this.favoritesId.push(idBearItem)
+        this.favoritesId.push(+idBearItem)
         this.setInFavoritesOnlyUniqueVal()
     }
 
-    availableButton = (button) => {
-        button.disabled = false
+    toggleAvailableButton = (button) => {
+        button.disabled = !this.favoritesId.length
     }
 
     setCountFavoritesToButton = (button) => {
         button.textContent = `Favorites (${this.favoritesId.length})`
     }
 
-    changeAddButtonToRemove = (button) => {
-        button.classList.remove('btn-warning')
-        button.classList.add('btn-danger')
-        button.textContent = `Remove`
+    toggleNameAddToFavoritesButton = (button) => {
+        button.classList.toggle('btn-warning')
+        button.classList.toggle('btn-danger')
+        button.textContent = button.textContent === 'Remove' ? 'Add' : `Remove`
     }
 
     getBearItemById = async (id) => {
@@ -68,7 +68,7 @@ export class Favorite {
         elementForContent.innerHTML = favoritesHTMLContent
     }
 
-    removeFavoriteItem = (id) => {
-        this.favoritesId = this.favoritesId.filter(item => item !== id)
+    removeBeerItemFromFavorites = (id) => {
+        this.favoritesId = this.favoritesId.filter(item => item !== +id)
     }
 }

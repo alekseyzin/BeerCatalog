@@ -24,6 +24,12 @@ function scrollToFirstCard() {
     firstCard.scrollIntoView({block: "start", behavior: "smooth"})
 }
 
+async function getBeersData (searchValue) {
+    const bearsData = await api.searchBear(searchValue)
+
+    return {bearsData, beerList, favorites: favorite.favoritesId, isSearch: true}
+}
+
 async function searchBearsHandler() {
     const searchValue = searchInput.value.trim()
     const isSearchEmpty = isInputEmpty(searchValue)
@@ -31,12 +37,12 @@ async function searchBearsHandler() {
     highlightingForInputs(isSearchEmpty, searchInput)
 
     if (!isSearchEmpty) {
-        const bearsData = await api.searchBear(searchValue)
-        const dataRecentSearch = {bearsData, searchValue, recentSearchElement}
+        const renderData = await getBeersData(searchValue)
+        const dataRecentSearch = {bearsData: renderData.bearsData, searchValue, recentSearchElement}
 
-        render.renderBearsList(bearsData, beerList, true)
+        render.renderBearsList(renderData)
         render.renderRecentSearchList(dataRecentSearch)
-        bearsData.length && scrollToFirstCard()
+        renderData.bearsData.length && scrollToFirstCard()
         activateLoadMoreButton()
     }
 }
@@ -49,17 +55,18 @@ async function searchInputHandler(e) {
 
 async function searchByResentSearch(e) {
     const searchValue = e.target.textContent
-    const bearsData = await api.searchBear(searchValue)
+    const renderData = await getBeersData(searchValue)
 
     searchInput.value = searchValue
-    render.renderBearsList(bearsData, beerList, true)
+    render.renderBearsList(renderData)
     scrollToFirstCard()
 }
 
 async function loadMoreHandler() {
     const bearsData = await api.loadMoreBears(beerList)
+    const renderData = {bearsData, beerList, favorites: favorite.favoritesId, isSearch: false}
 
-    render.renderBearsList(bearsData, beerList)
+    render.renderBearsList(renderData)
 }
 
 function isBeerListFilled () {
@@ -76,25 +83,43 @@ function toggleScrollButton() {
     scrollUpButton.style.display = pageYOffset > distanceToFirstBeerBlock ? 'block' : 'none'
 }
 
-function addToFavoriteHolder(e) {
-    if (e.target.classList.contains('btn-add-fav')) {
+function isAddToFavoriteBtn (element) {
+    return element.classList.contains('btn-add-fav')
+}
+
+function isFavoriteStatusActive (element) {
+    return element.getAttribute('favorite') === 'false'
+}
+
+function toggleBeerItemFavoriteStatus (e) {
+    if(isFavoriteStatusActive(e.target)) {
         favorite.setBearItemToFavorite(e.target.id)
-        favorite.availableButton(favoritesButton)
-        favorite.setCountFavoritesToButton(favoritesButton)
-        favorite.changeAddButtonToRemove(e.target)
+        e.target.setAttribute('favorite', 'true')
+    } else {
+        favorite.removeBeerItemFromFavorites(e.target.id)
+        e.target.setAttribute('favorite', 'false')
+    }
+    favorite.toggleAvailableButton(favoritesButton)
+    favorite.setCountFavoritesToButton(favoritesButton)
+    favorite.toggleNameAddToFavoritesButton(e.target)
+}
+
+function controllerBeerItemFavoriteStatus(e) {
+    if (isAddToFavoriteBtn(e.target)) {
+        toggleBeerItemFavoriteStatus(e)
     }
 }
 
-async function getFavoritesHolder() {
+async function renderFavoritesList() {
     const favorites = await favorite.getAllFavorites()
     const elementForContent = document.body.querySelector('.fav-list')
 
     favorite.renderFavorites(favorites, elementForContent)
 }
 
-async function removeFavoriteItemHandler(e) {
-    favorite.removeFavoriteItem(e.target.id)
-    await getFavoritesHolder()
+async function removeFavoriteFromFavoriteList(e) {
+    favorite.removeBeerItemFromFavorites(e.target.id)
+    await renderFavoritesList()
     favorite.setCountFavoritesToButton(favoritesButton)
 }
 
@@ -104,6 +129,6 @@ recentSearchElement.addEventListener('click', searchByResentSearch)
 loadMoreButton.addEventListener('click', loadMoreHandler)
 window.addEventListener('scroll', toggleScrollButton);
 scrollUpButton.addEventListener('click', scrollToFirstCard)
-beerList.addEventListener('click', addToFavoriteHolder)
-favoritesButton.addEventListener('click', getFavoritesHolder)
-favoritesList.addEventListener('click', removeFavoriteItemHandler)
+beerList.addEventListener('click', controllerBeerItemFavoriteStatus)
+favoritesButton.addEventListener('click', renderFavoritesList)
+favoritesList.addEventListener('click', removeFavoriteFromFavoriteList)
